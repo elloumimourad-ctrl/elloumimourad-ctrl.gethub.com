@@ -1,0 +1,287 @@
+import React, { useState, useEffect } from "react";
+import { Menu, X, ShoppingCart, Ticket, Facebook, Instagram, Twitter, Youtube, ChevronRight } from "lucide-react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+// ---------- UI helpers ----------
+const Container = ({ children, className = "" }) => (
+  <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
+);
+
+// ---------- NAV ----------
+function Nav() {
+  const [open, setOpen] = useState(false);
+  const links = [
+    { label: "Accueil", to: "/" },
+    { label: "Matchs", to: "/matchs" },
+    { label: "Histoire", to: "/histoire" },
+    { label: "Billetterie", to: "/#billetterie" },
+    { label: "Boutique", to: "/#boutique" },
+  ];
+  return (
+    <header className="sticky top-0 z-50 border-b border-gray-800 bg-black/60 backdrop-blur">
+      <Container className="flex h-16 items-center justify-between">
+        <Link to="/" className="flex items-center gap-2">
+          <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Club_Africain_logo.svg" alt="Logo Club Africain" className="h-10 w-auto" />
+          <div className="hidden sm:block">
+            <div className="text-xs uppercase tracking-widest text-gray-400">Club Africain</div>
+            <div className="-mt-0.5 text-sm font-semibold">Site officiel</div>
+          </div>
+        </Link>
+        <nav className="hidden gap-6 md:flex">
+          {links.map((l) => (
+            <Link key={l.label} to={l.to} className="text-sm font-medium text-gray-200 hover:text-white">{l.label}</Link>
+          ))}
+        </nav>
+        <div className="hidden items-center gap-2 md:flex">
+          <Link to="/#billetterie" className="inline-flex items-center gap-2 rounded-full border border-red-500/50 bg-red-600/20 px-4 py-2 text-sm font-semibold text-red-200 hover:bg-red-600/30">
+            <Ticket className="h-4 w-4" /> Billets
+          </Link>
+          <Link to="/#boutique" className="inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
+            <ShoppingCart className="h-4 w-4" /> Boutique
+          </Link>
+        </div>
+        <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X /> : <Menu />}</button>
+      </Container>
+      {open && (
+        <div className="md:hidden">
+          <Container className="pb-4">
+            <div className="grid gap-2">
+              {links.map((l) => (
+                <Link key={l.label} to={l.to} className="rounded-xl bg-gray-900 px-4 py-3 text-sm" onClick={()=>setOpen(false)}>{l.label}</Link>
+              ))}
+            </div>
+          </Container>
+        </div>
+      )}
+    </header>
+  );
+}
+
+// ---------- HERO (Home) ----------
+function Hero() {
+  const [light, setLight] = useState(false);
+  useEffect(() => {
+    const interval = setInterval(() => setLight((prev) => !prev), 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className={`relative overflow-hidden text-white transition-all duration-1000 ${light ? 'bg-gradient-to-br from-red-700 via-white to-red-800' : 'bg-gradient-to-br from-black via-red-900 to-black'}`}>
+      <div className="absolute inset-0 bg-black/40 animate-pulse" />
+      <Container className="relative z-10 flex flex-col items-center justify-center py-24 text-center">
+        <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Club_Africain_logo.svg" alt="Logo Club Africain" className="h-24 w-auto mb-6 drop-shadow-[0_0_20px_rgba(255,255,255,0.6)] animate-zoomIn" />
+        <h1 className="text-5xl font-extrabold sm:text-6xl animate-slideUp">Club Africain</h1>
+        <p className="mt-3 text-lg italic text-white/90 animate-pulse text-shadow-md">Fiers d’être clubistes</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-4">
+          <a href="#billetterie" className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-gray-100 animate-fadeInUp delay-500"><Ticket className="h-4 w-4"/> Billetterie</a>
+          <a href="#boutique" className="inline-flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white hover:bg-white/20 animate-fadeInUp delay-700"><ShoppingCart className="h-4 w-4"/> Boutique officielle</a>
+        </div>
+        <div className="mt-8 flex gap-4 text-white/80 animate-fadeInUp delay-1000">
+          <a href="#" aria-label="Facebook" className="hover:text-white"><Facebook className="h-5 w-5" /></a>
+          <a href="#" aria-label="Instagram" className="hover:text-white"><Instagram className="h-5 w-5" /></a>
+          <a href="#" aria-label="Twitter" className="hover:text-white"><Twitter className="h-5 w-5" /></a>
+          <a href="#" aria-label="YouTube" className="hover:text-white"><Youtube className="h-5 w-5" /></a>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+// ---------- MATCHS PAGE ----------
+function ProchainsMatchs() {
+  const matchs = [
+    { id: 1, adversaire: 'Club Bizertin', competition: 'Ligue 1 Tunisienne', date: '26 Oct 2025', heure: '20:00', lieu: 'Stade du C.A.', logoAdv: 'https://upload.wikimedia.org/wikipedia/fr/7/73/CA_Bizerte_%28logo%29.svg' },
+    { id: 2, adversaire: 'Espérance Tunis', competition: 'Ligue 1 Tunisienne', date: '02 Nov 2025', heure: '18:30', lieu: 'Stade de Radès', logoAdv: 'https://upload.wikimedia.org/wikipedia/fr/9/97/Esperance_Sportive_de_Tunis_%28logo%29.svg' },
+  ];
+
+  return (
+    <section id="matchs" className="bg-black py-16 text-white">
+      <Container>
+        <h2 className="text-3xl font-bold mb-8">Prochains Matchs</h2>
+        <div className="space-y-6">
+          {matchs.map((p) => (
+            <div key={p.id} className="border border-red-700 rounded-2xl p-6 bg-gradient-to-r from-black via-gray-950 to-black hover:from-red-800/40 hover:via-white/10 hover:to-red-900/40 transition-all duration-700 animate-fadeInUp">
+              <div className="text-sm text-gray-400 mb-3 uppercase tracking-widest">{p.competition}</div>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Club_Africain_logo.svg" alt="CA" className="h-12 w-12 rounded-full transform transition-transform duration-500 hover:scale-110" />
+                  <div className="text-xl font-bold">– : –</div>
+                  <img src={p.logoAdv} alt={p.adversaire} className="h-12 w-12 rounded-full transform transition-transform duration-500 hover:scale-110" />
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">Club Africain vs {p.adversaire}</div>
+                  <div className="text-xs text-gray-400">{p.date} — {p.lieu}</div>
+                </div>
+                <a href="#billetterie" className="rounded-lg bg-gradient-to-r from-red-600 to-white text-black font-semibold px-4 py-2 text-xs hover:from-white hover:to-red-600 hover:text-white transition-all">Billets</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function DernieresActualitesEtResultats() {
+  const news = [
+    { id: 1, title: 'Victoire éclatante 3-0 contre l’Espérance', date: '21 Oct 2025', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1600&auto=format&fit=crop' },
+    { id: 2, title: 'Le Club Africain se qualifie pour la Coupe d’Afrique', date: '18 Oct 2025', img: 'https://images.unsplash.com/photo-1521412644187-c49fa049e84d?q=80&w=1600&auto=format&fit=crop' },
+    { id: 3, title: 'Présentation du nouveau maillot 2025/26', date: '15 Oct 2025', img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1600&auto=format&fit=crop' },
+  ];
+  const matchs = [
+    { id: 1, adversaire: 'Étoile du Sahel', score: '2-1', date: '19 Oct 2025', lieu: 'Stade de Radès' },
+    { id: 2, adversaire: 'US Monastir', score: '1-0', date: '12 Oct 2025', lieu: 'Stade du C.A.' },
+    { id: 3, adversaire: 'CS Sfaxien', score: '3-2', date: '05 Oct 2025', lieu: 'Stade Taïeb Mhiri' },
+  ];
+  return (
+    <section className="bg-black py-16 text-white">
+      <Container>
+        <div className="grid gap-10 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <h3 className="text-xl font-semibold mb-4 border-l-4 border-red-600 pl-3">Dernières actualités</h3>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {news.map((n) => (
+                <a key={n.id} href="#" className="group block rounded-xl overflow-hidden border border-gray-800 bg-gray-900/40 hover:bg-gray-800/60 transition-all">
+                  <img src={n.img} alt="" className="h-40 w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="p-4">
+                    <div className="text-xs text-gray-400 mb-1">{n.date}</div>
+                    <h4 className="font-semibold text-sm group-hover:text-red-400">{n.title}</h4>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-4 border-l-4 border-red-600 pl-3">Derniers résultats</h3>
+            <div className="space-y-4">
+              {matchs.map((m) => (
+                <div key={m.id} className="flex justify-between items-center border border-gray-800 rounded-xl p-4 bg-gray-900/40 hover:bg-gray-800/60 transition-all">
+                  <div>
+                    <div className="font-semibold">Club Africain vs {m.adversaire}</div>
+                    <div className="text-xs text-gray-400">{m.date} — {m.lieu}</div>
+                  </div>
+                  <div className="text-xl font-bold text-red-400">{m.score}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function MatchsPage() {
+  return (
+    <main className="bg-black">
+      <ProchainsMatchs />
+      <DernieresActualitesEtResultats />
+    </main>
+  );
+}
+
+// ---------- HISTOIRE PAGE ----------
+function HistoirePage() {
+  const timeline = [
+    { date: '1920', title: 'Fondation', desc: 'Le Club Africain naît dans la médina de Tunis le 4 octobre 1920. Rouge et blanc, les couleurs du drapeau, marquent dès l’origine l’identité du club.' },
+    { date: '1947', title: 'Premier grand titre', desc: 'Le CA remporte un premier titre de champion dans l’ère pré-indépendance, s’imposant comme un pilier du football tunisien.' },
+    { date: '1956', title: 'Après l’indépendance', desc: 'Le club s’érige en référence du championnat national et structure ses sections omnisports.' },
+    { date: '1970s', title: 'Rayonnement régional', desc: 'Les titres nationaux s’enchaînent, préparant la conquête du continent.' },
+    { date: '1991', title: 'Champion d’Afrique', desc: 'Le CA devient le premier club tunisien à remporter la Coupe d’Afrique des clubs champions (Ligue des champions CAF). Une date historique.' },
+    { date: '2000s', title: 'Tradition & renouveau', desc: 'Le club brille en championnats, coupes et supercoupes tout en formant des générations de talents.' },
+    { date: 'Aujourd’hui', title: 'Un symbole', desc: 'Avec des supporters fidèles et des sections omnisports, le CA demeure un monument du sport tunisien et africain.' },
+  ];
+
+  const gallery = [
+    { src: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=1600&auto=format&fit=crop', caption: 'Équipe historique (image illustrative)' },
+    { src: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?q=80&w=1600&auto=format&fit=crop', caption: 'Soirée de trophée (illustration)' },
+    { src: 'https://images.unsplash.com/photo-1486286701208-1d58e9338013?q=80&w=1600&auto=format&fit=crop', caption: 'Supporters clubistes (illustration)' },
+    { src: 'https://images.unsplash.com/photo-1471295253337-3ceaaedca402?q=80&w=1600&auto=format&fit=crop', caption: 'Maillots d’époque (illustration)' },
+  ];
+
+  return (
+    <main className="bg-[#7a0b0b] text-white">
+      <section className="relative">{/* Header photo */}
+        <div className="h-64 w-full bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2400&auto=format&fit=crop')] bg-cover bg-center" />
+      </section>
+
+      <Container className="py-12">
+        <h1 className="text-4xl font-extrabold mb-6">Histoire du Club Africain</h1>
+        <p className="max-w-3xl text-white/90 text-lg">
+          Fondé le 4 octobre 1920, le Club Africain incarne l’identité tunisienne à travers ses couleurs historiques, le rouge et le blanc. Des premiers pas dans la médina de Tunis aux grandes scènes africaines, le CA a écrit une histoire faite de titres, de talents et de ferveur populaire.
+        </p>
+
+        <div className="mt-10 grid gap-8 lg:grid-cols-[320px_1fr]">
+          <div>
+            <h2 className="text-2xl font-bold">Frise chronologique</h2>
+            <p className="text-sm text-white/80">1920 — Aujourd’hui</p>
+          </div>
+          <ol className="relative border-l border-white/20 pl-6 space-y-8">
+            {timeline.map((e, idx) => (
+              <li key={idx} className="ml-2">
+                <div className="absolute -left-1.5 mt-1 h-3 w-3 rounded-full bg-white" />
+                <h3 className="text-xl font-semibold">{e.date} — {e.title}</h3>
+                <p className="mt-1 text-white/90">{e.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="mt-14">
+          <h2 className="text-2xl font-bold mb-4">Galerie d’archives</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {gallery.map((g, i) => (
+              <figure key={i} className="overflow-hidden rounded-xl border border-white/20 bg-white/5">
+                <img src={g.src} alt="Archive" className="h-40 w-full object-cover" />
+                <figcaption className="p-3 text-sm text-white/80">{g.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </Container>
+    </main>
+  );
+}
+
+// ---------- FOOTER ----------
+function Footer() {
+  return (
+    <footer className="border-t border-gray-800 bg-black py-12">
+      <Container className="flex flex-col items-center text-center text-gray-400">
+        <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/Club_Africain_logo.svg" alt="Logo Club Africain" className="h-16 w-auto mb-4 animate-fadeIn" />
+        <p className="text-sm">© {new Date().getFullYear()} Club Africain — Tous droits réservés.<br/>Site officiel du Club Africain, fondé en 1920.</p>
+      </Container>
+    </footer>
+  );
+}
+
+// ---------- ROUTER ROOT ----------
+export default function ClubAfricainOfficialSite() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-black text-white">
+        <Nav />
+        <Routes>
+          <Route path="/" element={<>
+            <Hero />
+            {/* Accueil: teaser des matchs + actus */}
+            <ProchainsMatchs />
+            <DernieresActualitesEtResultats />
+          </>} />
+          <Route path="/matchs" element={<MatchsPage />} />
+          <Route path="/histoire" element={<HistoirePage />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+/* ---------- Animations CSS à ajouter dans votre global.css ----------
+.animate-zoomIn { animation: zoomIn 1s ease forwards; }
+.animate-slideUp { animation: slideUp 1s ease forwards; }
+.animate-fadeInUp { animation: fadeInUp 1s ease forwards; }
+@keyframes zoomIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes slideUp { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+@keyframes fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+*/
